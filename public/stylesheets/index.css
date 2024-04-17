@@ -1,0 +1,47 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.main .header {
+    display: flex;
+    justify-content: space-between;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+
+.main .header .add {
+    background-color: #ff9900;
+    color: #fff !important;
+    padding: 5px !important;
+    border: none;
+    height: 35px !important;
+    border-radius: 8px !important;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    text-decoration: none !important;
+}
+
+.main .header .add:hover {
+    background-color: #ff6600;
+}
+
+img {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+}
+
+tr {
+    width: 100%;
+    align-items: center;
+}
+
+.main table thead tr {
+    background-color: black !important;  
+    color: white;
+}
