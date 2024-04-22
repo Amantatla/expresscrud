@@ -1,68 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const multer = require('multer');
 const user = require('./users')
 
-// imageUpload 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname)
-  }
-})
-
-var upload = multer({
-  storage: storage,
-}).single('image');
-
-// insert user into database 
-// router.post('/add', upload, (req, res) => {
-//   const user = new user({
-//     name : req.body.name,
-//     email : req.body.email,
-//     phone : req.body.phone,
-//     image : req.file.filename
-//   });
-//   user.save((err) =>{
-//     if (err) {
-//       res.json({message: err.message, type: 'danger'});
-//     } else {
-//       req.session.message = {
-//         type: 'success',
-//         message: 'User Added Sucessfully.'
-//       };
-//       res.redirect("/")
-//     }
-//   })
-// }) 
-router.post('/add', upload, async (req, res) => {
-  try {
-    const { name, email, phone } = req.body;
-    const image = req.file.filename;
-
-    const newUser = new user({ name, email, phone, image });
-    await newUser.save();
-    req.session.message = {
-      type: 'success',
-      message: 'User added successfully.'
-    };
-    res.redirect('/');
-  } catch (err) {
-    // Handle errors
-    console.error('Error adding user:', err);
-    res.status(500).json({ message: 'Failed to add user.', type: 'danger' });
-  }
-});
-
-// render add page 
-router.get('/add', function (req, res) {
-  res.render('add_user.ejs', { title: 'Add New User' });
-});
 
 // GET ALL USER 
-router.get('/', function (req, res) {
+router.get('/', (req, res) => {
   user.find({})
     .then(users => {
       res.render('index', {
@@ -75,6 +17,32 @@ router.get('/', function (req, res) {
     });
 });
 
+// render add page 
+router.get('/add', (req, res) => {
+  res.render('add_user.ejs', { title: 'Add New User' });
+});
+
+
+// insert user into database 
+router.post('/add', async (req, res) => {
+  try {
+    const newUser = new user({
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+    });
+    await newUser.save();
+    req.session.message = {
+      type: 'success',
+      message: 'User added successfully.'
+    };
+    res.redirect('/');
+  } catch (err) {
+    console.error('Error adding user:', err);
+    res.status(500).json({ message: 'Failed to add user.', type: 'danger' });
+  }
+});
+
 // delete a user 
 router.delete('/delete/:id', async (req, res) => {
   const userId = req.params.id;
@@ -83,16 +51,53 @@ router.delete('/delete/:id', async (req, res) => {
     if (!deletedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.json({ message: 'User deleted successfully' });
+    const updatedUsers = await user.find();
     res.redirect('/');
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error', error: err });
   }
 });
 
-router.delete('/delete', function (req, res) {
-  res.clearCookie("name")
-  res.send("Cleared")
+// edit page route 
+router.get('/edit/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const foundUser = await user.findById(userId);
+    if (!foundUser) {
+      return res.status(404).send('User not found');
+    }
+    res.render('edit_user', {
+      title: 'Edit User',
+      user: foundUser
+    });
+  } catch (err) {
+    console.error('Error finding user:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// update user
+router.post('/update/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const updatedUser = await user.findByIdAndUpdate(
+      userId,
+      {
+        name: req.body.name,
+        email: req.body.email,
+        phone: req.body.phone
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).send('User not found');
+    }
+    res.redirect('/');
+  } catch (err) {
+    console.error('Error updating user:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 module.exports = router;

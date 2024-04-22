@@ -13,15 +13,16 @@
     <body>
         <div class="containar">
             <div class="card">
-                <h2>Add User</h2>
-                <form action="/add" method="post" id="add_form">
+                <h2>Edit User</h2>
+                <form action="/update/<%= user._id %>" method="post"
+                    id="add_form" >
                     <input type="text" id="name" name="name"
-                        placeholder="Name" required>
+                        placeholder="Name" value="<%= user.name %>" required>
                     <input type="text" id="email" name="email"
-                        placeholder="Email" required>
+                        placeholder="Email" value="<%= user.email %>" required>
                     <input type="text" id="phone" name="phone"
-                        placeholder="phone" required>
-                    <button type="submit">Submit</button>
+                        placeholder="phone" value="<%= user.phone %>" required>
+                    <button type="submit">Update</button>
                 </form>
             </div>
         </div>

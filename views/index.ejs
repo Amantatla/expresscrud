@@ -25,7 +25,6 @@
         <thead class="table-dark">
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">Image</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Phone</th>
@@ -36,14 +35,12 @@
           <% users.forEach((row, index)=> { %>
           <tr>
             <td><%= index %></td>
-            <td><img
-                src="/uploads/<%= row.image %>"></td>
             <td><%= row.name %></td>
             <td><%= row.email %></td>
             <td><%= row.phone %></td>
             <td>
-              <button href="/edit/<%= row._id %>" class="btn btn-success">
-                <i class="fa-solid fa-edit"></i></button>
+              <a href="/edit/<%= row._id %>" class="btn btn-success">
+                <i class="fa-solid fa-edit"></i></a>
               <button onclick="deleteUser('<%= row._id %>')"
                 class="btn btn-danger">
                 <i class="fa-solid fa-trash"></i> </button>
