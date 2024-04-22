@@ -41,8 +41,6 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use('/uploads', express.static('uploads'));
-
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
