@@ -7,21 +7,12 @@ const user = require('./users')
 router.get('/', (req, res) => {
   user.find({})
     .then(users => {
-      res.render('index', {
-        title: 'Express',
-        users: users
-      });
+      res.send(users = users);
     })
     .catch(err => {
       res.status(500).json({ message: 'Internal Server Error', error: err });
     });
 });
-
-// render add page 
-router.get('/add', (req, res) => {
-  res.render('add_user.ejs', { title: 'Add New User' });
-});
-
 
 // insert user into database 
 router.post('/add', async (req, res) => {
@@ -36,12 +27,12 @@ router.post('/add', async (req, res) => {
       type: 'success',
       message: 'User added successfully.'
     };
-    res.redirect('/');
+    res.send("User Added Successfully");
   } catch (err) {
     console.error('Error adding user:', err);
     res.status(500).json({ message: 'Failed to add user.', type: 'danger' });
   }
-});
+}); 
 
 // delete a user 
 router.delete('/delete/:id', async (req, res) => {
@@ -52,7 +43,7 @@ router.delete('/delete/:id', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     const updatedUsers = await user.find();
-    res.redirect('/');
+    res.send("User deleted successfully");
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error', error: err });
   }
@@ -66,10 +57,7 @@ router.get('/edit/:id', async (req, res) => {
     if (!foundUser) {
       return res.status(404).send('User not found');
     }
-    res.render('edit_user', {
-      title: 'Edit User',
-      user: foundUser
-    });
+    res.send(foundUser);
   } catch (err) {
     console.error('Error finding user:', err);
     res.status(500).send('Internal Server Error');
@@ -93,7 +81,7 @@ router.post('/update/:id', async (req, res) => {
     if (!updatedUser) {
       return res.status(404).send('User not found');
     }
-    res.redirect('/');
+    res.send('Error');
   } catch (err) {
     console.error('Error updating user:', err);
     res.status(500).send('Internal Server Error');
