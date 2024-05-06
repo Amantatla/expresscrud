@@ -4,7 +4,7 @@ const user = require('./users')
 
 
 // GET ALL USER 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   user.find({})
     .then(users => {
       res.send(users = users);
@@ -33,6 +33,7 @@ router.post('/add', async (req, res) => {
     res.status(500).json({ message: 'Failed to add user.', type: 'danger' });
   }
 });
+
 
 // delete a user 
 router.delete('/delete/:id', async (req, res) => {
