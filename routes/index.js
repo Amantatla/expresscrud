@@ -27,12 +27,12 @@ router.post('/add', async (req, res) => {
       type: 'success',
       message: 'User added successfully.'
     };
-    res.send("User Added Successfully");
+    res.status(200).json({ message: 'User added successfully.', type: 'success' });
   } catch (err) {
     console.error('Error adding user:', err);
     res.status(500).json({ message: 'Failed to add user.', type: 'danger' });
   }
-}); 
+});
 
 // delete a user 
 router.delete('/delete/:id', async (req, res) => {
@@ -43,7 +43,7 @@ router.delete('/delete/:id', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     const updatedUsers = await user.find();
-    res.send("User deleted successfully");
+    res.status(200).json({ message: 'User deleted successfully.', type: 'success' });
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error', error: err });
   }
@@ -81,7 +81,7 @@ router.post('/update/:id', async (req, res) => {
     if (!updatedUser) {
       return res.status(404).send('User not found');
     }
-    res.send('Error');
+    res.status(200).json({ message: 'User Updated successfully.', type: 'success' });
   } catch (err) {
     console.error('Error updating user:', err);
     res.status(500).send('Internal Server Error');
